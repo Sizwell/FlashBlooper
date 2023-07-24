@@ -33,4 +33,10 @@ public class SensitiveWordsController {
         String filePath = "C:\\Users\\SizweNcikana\\IdeaProjects\\flash\\Bloop\\src\\main\\resources\\data\\sql_sensitive_list.txt";
         sensitiveWordsService.processAndWriteToFile(filePath);
     }
+
+    @PostMapping("/add_new_word")
+    public void addWord(@RequestBody SensitiveWords sensitiveWords)
+    {
+        sensitiveWordsService.addNewWord(sensitiveWords);
+    }
 }

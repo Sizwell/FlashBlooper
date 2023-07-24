@@ -10,12 +10,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @Service
 public class SensitiveWordsService {
 
     private final SensitiveWordsRepository sensitiveWordsRepository;
+    private static final Logger logger = Logger.getLogger(SensitiveWordsService.class.getName());
 
     @Autowired
     public SensitiveWordsService(SensitiveWordsRepository sensitiveWordsRepository) {
@@ -70,4 +73,18 @@ public class SensitiveWordsService {
 
         return modifiedStrings;
     }
+
+    public void addNewWord(SensitiveWords sensitiveWords)
+    {
+        Optional<SensitiveWords> sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(sensitiveWords.getWords());
+        if (sensitiveWordsOptional.isPresent())
+        {
+            logger.warning("Word already exists...");
+        }
+        else {
+            sensitiveWordsRepository.save(sensitiveWords);
+            logger.info("Word added to Database...");
+        }
+    }
+
 }
