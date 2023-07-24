@@ -2,17 +2,16 @@ package com.itech.Blooper.words.service;
 
 import com.itech.Blooper.words.entity.SensitiveWords;
 import com.itech.Blooper.words.repository.SensitiveWordsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 @Service
 public class SensitiveWordsService {
@@ -27,9 +26,12 @@ public class SensitiveWordsService {
 
     public List<SensitiveWords> getSensitiveWords()
     {
-        return List.of(
-                new SensitiveWords("This is getting real")
-        );
+        List<SensitiveWords> retrieveAll = sensitiveWordsRepository.findAll();
+        if (retrieveAll.isEmpty())
+        {
+            logger.info("Database contains no Sensitive Words");
+        }
+        return sensitiveWordsRepository.findAll();
     }
 
     public void processAndWriteToFile(String inputFilePath) {
@@ -74,9 +76,10 @@ public class SensitiveWordsService {
         return modifiedStrings;
     }
 
+    Optional<SensitiveWords> sensitiveWordsOptional;
     public void addNewWord(SensitiveWords sensitiveWords)
     {
-        Optional<SensitiveWords> sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(sensitiveWords.getWords());
+        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(sensitiveWords.getWords());
         if (sensitiveWordsOptional.isPresent())
         {
             logger.warning("Word already exists...");
@@ -85,6 +88,34 @@ public class SensitiveWordsService {
             sensitiveWordsRepository.save(sensitiveWords);
             logger.info("Word added to Database...");
         }
+    }
+
+    public List<SensitiveWords> searchWord(String searchWord)
+    {
+        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(searchWord);
+        if (sensitiveWordsOptional.isEmpty())
+        {
+            logger.info("Word not found!");
+        }
+        return sensitiveWordsRepository.findByWords(searchWord);
+    }
+
+    @Transactional
+    public void updateWord(Long id, String searchWord)
+    {
+        SensitiveWords sensitiveWords;
+        sensitiveWords = sensitiveWordsRepository
+                .findById(id)
+                .orElseThrow(()-> new IllegalStateException("Word with ID " + id + " does not exist"));
+
+        //Check if the search word is not null, word has characters and is not equal to word already in DB
+        if (searchWord != null && searchWord.length() > 0 && !Objects.equals(sensitiveWords.getWords(), searchWord))
+        {
+            sensitiveWords.setWords(searchWord);
+            sensitiveWordsRepository.save(sensitiveWords);
+            logger.fine("Word successfully Updated");
+        }
+
     }
 
 }

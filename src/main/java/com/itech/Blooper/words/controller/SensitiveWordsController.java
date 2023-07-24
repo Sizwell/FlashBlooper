@@ -21,7 +21,7 @@ public class SensitiveWordsController {
         this.sensitiveWordsService = sensitiveWordsService;
     }
 
-    @GetMapping("/home")
+    @GetMapping("/all_words")
     public List<SensitiveWords> getWords()
     {
         return sensitiveWordsService.getSensitiveWords();
@@ -38,5 +38,17 @@ public class SensitiveWordsController {
     public void addWord(@RequestBody SensitiveWords sensitiveWords)
     {
         sensitiveWordsService.addNewWord(sensitiveWords);
+    }
+
+    @GetMapping("/search_word")
+    public List<SensitiveWords> returnOneWord(@RequestParam("word") String searchWord)
+    {
+        return sensitiveWordsService.searchWord(searchWord);
+    }
+
+    @PutMapping("/update_word")
+    public void updateWord(@RequestBody SensitiveWords sensitiveWords)
+    {
+        sensitiveWordsService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords());
     }
 }
