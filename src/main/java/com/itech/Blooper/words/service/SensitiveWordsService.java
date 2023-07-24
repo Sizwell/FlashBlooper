@@ -29,41 +29,18 @@ public class SensitiveWordsService {
         );
     }
 
-    Files files;
-    public void saveWordsFromFile(String filePath)
-    {
-        try {
-            Stream<String> lines = files.lines(Paths.get(filePath));
-            lines.forEach(this::saveWords);
-        } catch (IOException ioe)
-        {
-            ioe.printStackTrace();
-        }
-    }
-
-    public void saveWords(String word)
-    {
-        SensitiveWords sensitiveWords = new SensitiveWords();
-        sensitiveWords.setWords(word);
-        sensitiveWordsRepository.save(sensitiveWords);
-    }
-
-    public static void processAndWriteToFile(String inputFilePath, String outputFilePath) {
+    public void processAndWriteToFile(String inputFilePath) {
         List<String> modifiedStrings = readAndProcessFile(inputFilePath);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
-            // Write each modified string to the output file
-            for (String str : modifiedStrings) {
-                writer.write(str);
-                writer.newLine();
-            }
-            System.out.println("File written successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Save the modified strings to the database
+        for (String str : modifiedStrings) {
+            SensitiveWords sensitiveWords = new SensitiveWords();
+            sensitiveWords.setWords(str);
+            sensitiveWordsRepository.save(sensitiveWords);
         }
     }
 
-    public static List<String> readAndProcessFile(String filePath) {
+    public List<String> readAndProcessFile(String filePath) {
         List<String> modifiedStrings = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
