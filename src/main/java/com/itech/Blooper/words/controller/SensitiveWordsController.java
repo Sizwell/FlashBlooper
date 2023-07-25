@@ -35,9 +35,9 @@ public class SensitiveWordsController {
     }
 
     @PostMapping("/add_new_word")
-    public void addWord(@RequestBody SensitiveWords sensitiveWords)
+    public void addWord(@RequestParam("word") String newWord)
     {
-        sensitiveWordsService.addNewWord(sensitiveWords);
+        sensitiveWordsService.addNewWord(newWord);
     }
 
     @GetMapping("/search_word")
@@ -50,5 +50,17 @@ public class SensitiveWordsController {
     public void updateWord(@RequestBody SensitiveWords sensitiveWords)
     {
         sensitiveWordsService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords());
+    }
+
+    @DeleteMapping("/delete_word_by_id/{id}")
+    public void deleteWordById(@PathVariable("id") Long id)
+    {
+        sensitiveWordsService.deleteWord(id);
+    }
+
+    @DeleteMapping("/search_and_delete_word")
+    public void deleteWord(@RequestParam("word") String searchWord)
+    {
+        sensitiveWordsService.searchAndDelete(searchWord);
     }
 }

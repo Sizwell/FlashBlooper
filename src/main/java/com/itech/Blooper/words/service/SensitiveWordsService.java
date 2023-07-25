@@ -77,16 +77,18 @@ public class SensitiveWordsService {
     }
 
     Optional<SensitiveWords> sensitiveWordsOptional;
-    public void addNewWord(SensitiveWords sensitiveWords)
+    public void addNewWord(String newWord)
     {
+        SensitiveWords sensitiveWords = new SensitiveWords();
         sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(sensitiveWords.getWords());
         if (sensitiveWordsOptional.isPresent())
         {
             logger.warning("Word already exists...");
         }
         else {
+            sensitiveWords.setWords(newWord);
             sensitiveWordsRepository.save(sensitiveWords);
-            logger.info("Word added to Database...");
+            logger.fine("Word added to Database...");
         }
     }
 
@@ -106,16 +108,40 @@ public class SensitiveWordsService {
         SensitiveWords sensitiveWords;
         sensitiveWords = sensitiveWordsRepository
                 .findById(id)
-                .orElseThrow(()-> new IllegalStateException("Word with ID " + id + " does not exist"));
+                .orElseThrow(()-> new IllegalStateException("Word with ID " + "'" +  id + "'" + " does not exist"));
 
         //Check if the search word is not null, word has characters and is not equal to word already in DB
         if (searchWord != null && searchWord.length() > 0 && !Objects.equals(sensitiveWords.getWords(), searchWord))
         {
             sensitiveWords.setWords(searchWord);
             sensitiveWordsRepository.save(sensitiveWords);
-            logger.fine("Word successfully Updated");
+            logger.fine("Word successfully Updated.");
         }
 
     }
 
+    public void deleteWord(Long id)
+    {
+        boolean exists = sensitiveWordsRepository.existsById(id);
+        if (!exists)
+        {
+            logger.info("Word with ID " + "'" + id + "'" + " does not exist.");
+        } else {
+            logger.warning("Deleting Word with ID " + "'" + id + "'");
+            sensitiveWordsRepository.deleteById(id);
+        }
+    }
+
+    public void searchAndDelete(String word)
+    {
+        SensitiveWords sensitiveWords = new SensitiveWords();
+        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(word);
+        if (sensitiveWordsOptional.isPresent())
+        {
+            logger.info("Removing sensitive word from Database...");
+            sensitiveWordsRepository.delete(sensitiveWords);
+        } else {
+            logger.warning("Word " + "'" + word + "'" + " does not exist...");
+        }
+    }
 }
