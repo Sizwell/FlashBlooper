@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -37,13 +38,13 @@ public class SensitiveWordsController {
     @PostMapping("/add_new_word")
     public void addWord(@RequestParam("word") String newWord)
     {
-        sensitiveWordsService.addNewWord(newWord);
+        sensitiveWordsService.addNewWord(newWord.toUpperCase());
     }
 
     @GetMapping("/search_word")
     public List<SensitiveWords> returnOneWord(@RequestParam("word") String searchWord)
     {
-        return sensitiveWordsService.searchWord(searchWord);
+        return sensitiveWordsService.searchWord(searchWord.toUpperCase());
     }
 
     @PutMapping("/update_word")
@@ -61,6 +62,12 @@ public class SensitiveWordsController {
     @DeleteMapping("/search_and_delete_word")
     public void deleteWord(@RequestParam("word") String searchWord)
     {
-        sensitiveWordsService.searchAndDelete(searchWord);
+        sensitiveWordsService.searchAndDelete(searchWord.toUpperCase());
+    }
+
+    @PostMapping("/process_input")
+    public List<String> userInput(@RequestParam("words") String userInput)
+    {
+        return sensitiveWordsService.userRequest(userInput.toUpperCase());
     }
 }
