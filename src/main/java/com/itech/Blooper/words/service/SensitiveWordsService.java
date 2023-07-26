@@ -88,15 +88,4 @@ public class SensitiveWordsService {
             logger.fine("Word added to Database...");
         }
     }
-
-    public List<SensitiveWords> searchWord(String searchWord)
-    {
-        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(searchWord);
-        if (sensitiveWordsOptional.isEmpty())
-        {
-            logger.info("Word not found!");
-        }
-        return sensitiveWordsRepository.findByWords(searchWord);
-    }
-
 }
