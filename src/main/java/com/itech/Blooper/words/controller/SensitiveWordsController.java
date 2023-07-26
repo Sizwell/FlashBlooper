@@ -3,6 +3,7 @@ package com.itech.Blooper.words.controller;
 import com.itech.Blooper.words.service.DeleteService;
 import com.itech.Blooper.words.service.SensitiveWordsService;
 import com.itech.Blooper.words.entity.SensitiveWords;
+import com.itech.Blooper.words.service.UpdateService;
 import com.itech.Blooper.words.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,19 @@ public class SensitiveWordsController {
     private final SensitiveWordsService sensitiveWordsService;
     private final UserService userService;
     private final DeleteService deleteService;
+    private final UpdateService updateService;
 
     @Autowired
-    public SensitiveWordsController(SensitiveWordsService sensitiveWordsService, UserService userService, DeleteService deleteService) {
+    public SensitiveWordsController(
+            SensitiveWordsService sensitiveWordsService,
+            UserService userService,
+            DeleteService deleteService,
+            UpdateService updateService
+    ) {
         this.sensitiveWordsService = sensitiveWordsService;
         this.userService = userService;
         this.deleteService = deleteService;
+        this.updateService = updateService;
     }
 
     @GetMapping("/all_words")
@@ -52,7 +60,7 @@ public class SensitiveWordsController {
     @PutMapping("/update_word")
     public void updateWord(@RequestBody SensitiveWords sensitiveWords)
     {
-        sensitiveWordsService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords());
+        updateService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords().toUpperCase());
     }
 
     @DeleteMapping("/delete_word_by_id/{id}")

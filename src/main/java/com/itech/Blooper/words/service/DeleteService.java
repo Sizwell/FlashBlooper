@@ -19,8 +19,6 @@ public class DeleteService {
         this.sensitiveWordsRepository = sensitiveWordsRepository;
     }
 
-    Optional<SensitiveWords> sensitiveWordsOptional;
-
     public void deleteWord(Long id)
     {
         boolean exists = sensitiveWordsRepository.existsById(id);

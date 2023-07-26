@@ -99,23 +99,4 @@ public class SensitiveWordsService {
         return sensitiveWordsRepository.findByWords(searchWord);
     }
 
-    @Transactional
-    public void updateWord(Long id, String searchWord)
-    {
-        SensitiveWords sensitiveWords;
-        sensitiveWords = sensitiveWordsRepository
-                .findById(id)
-                .orElseThrow(()-> new IllegalStateException("Word with ID " + "'" +  id + "'" + " does not exist"));
-
-        //Check if the search word is not null, word has characters and is not equal to word already in DB
-        if (searchWord != null && searchWord.length() > 0 && !Objects.equals(sensitiveWords.getWords(), searchWord))
-        {
-            sensitiveWords.setWords(searchWord);
-            sensitiveWordsRepository.save(sensitiveWords);
-            logger.fine("Word successfully Updated.");
-        }
-
-    }
-
-
 }
