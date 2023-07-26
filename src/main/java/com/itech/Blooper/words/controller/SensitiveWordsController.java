@@ -2,13 +2,10 @@ package com.itech.Blooper.words.controller;
 
 import com.itech.Blooper.words.service.SensitiveWordsService;
 import com.itech.Blooper.words.entity.SensitiveWords;
+import com.itech.Blooper.words.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -16,10 +13,12 @@ import java.util.List;
 public class SensitiveWordsController {
 
     private final SensitiveWordsService sensitiveWordsService;
+    private final UserService userService;
 
     @Autowired
-    public SensitiveWordsController(SensitiveWordsService sensitiveWordsService) {
+    public SensitiveWordsController(SensitiveWordsService sensitiveWordsService, UserService userService) {
         this.sensitiveWordsService = sensitiveWordsService;
+        this.userService = userService;
     }
 
     @GetMapping("/all_words")
@@ -68,6 +67,6 @@ public class SensitiveWordsController {
     @PostMapping("/process_input")
     public List<String> userInput(@RequestParam("words") String userInput)
     {
-        return sensitiveWordsService.userRequest(userInput.toUpperCase());
+        return userService.userRequest(userInput.toUpperCase());
     }
 }
