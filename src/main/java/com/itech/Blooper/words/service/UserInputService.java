@@ -12,13 +12,13 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
-public class UserService {
+public class UserInputService {
 
     private final SensitiveWordsRepository sensitiveWordsRepository;
-    private static final Logger logger = Logger.getLogger(UserService.class.getName());
+    private static final Logger logger = Logger.getLogger(UserInputService.class.getName());
 
     @Autowired
-    public UserService(SensitiveWordsRepository sensitiveWordsRepository) {
+    public UserInputService(SensitiveWordsRepository sensitiveWordsRepository) {
         this.sensitiveWordsRepository = sensitiveWordsRepository;
     }
 

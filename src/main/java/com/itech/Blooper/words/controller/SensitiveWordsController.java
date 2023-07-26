@@ -12,27 +12,29 @@ import java.util.List;
 public class SensitiveWordsController {
 
     private final SensitiveWordsService sensitiveWordsService;
-    private final UserService userService;
+    private final UserInputService userInputService;
     private final DeleteService deleteService;
     private final UpdateService updateService;
     private final SearchService searchService;
     private final AddService addService;
+    private final UploadWordsService uploadWordsService;
 
     @Autowired
     public SensitiveWordsController(
             SensitiveWordsService sensitiveWordsService,
-            UserService userService,
+            UserInputService userInputService,
             DeleteService deleteService,
             UpdateService updateService,
             SearchService searchService,
-            AddService addService)
+            AddService addService, UploadWordsService uploadWordsService)
     {
         this.sensitiveWordsService = sensitiveWordsService;
-        this.userService = userService;
+        this.userInputService = userInputService;
         this.deleteService = deleteService;
         this.updateService = updateService;
         this.searchService = searchService;
         this.addService = addService;
+        this.uploadWordsService = uploadWordsService;
     }
 
     @GetMapping("/all_words")
@@ -41,11 +43,11 @@ public class SensitiveWordsController {
         return sensitiveWordsService.getSensitiveWords();
     }
 
-    @PostMapping("/save_processed_words")
+    @PostMapping("/upload_words")
     public void saveFromFile()
     {
         String filePath = "C:\\Users\\SizweNcikana\\IdeaProjects\\flash\\Bloop\\src\\main\\resources\\data\\sql_sensitive_list.txt";
-        sensitiveWordsService.processAndWriteToFile(filePath);
+        uploadWordsService.processFile(filePath);
     }
 
     @PostMapping("/add_new_word")
@@ -75,6 +77,6 @@ public class SensitiveWordsController {
     @PostMapping("/process_input")
     public List<String> userInput(@RequestParam("words") String userInput)
     {
-        return userService.userRequest(userInput.toUpperCase());
+        return userInputService.userRequest(userInput.toUpperCase());
     }
 }
