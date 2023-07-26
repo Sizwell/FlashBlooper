@@ -117,28 +117,5 @@ public class SensitiveWordsService {
 
     }
 
-    public void deleteWord(Long id)
-    {
-        boolean exists = sensitiveWordsRepository.existsById(id);
-        if (!exists)
-        {
-            logger.info("Word with ID " + "'" + id + "'" + " does not exist.");
-        } else {
-            logger.warning("Deleting Word with ID " + "'" + id + "'");
-            sensitiveWordsRepository.deleteById(id);
-        }
-    }
 
-    public void searchAndDelete(String word)
-    {
-        SensitiveWords sensitiveWords = new SensitiveWords();
-        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(word);
-        if (sensitiveWordsOptional.isPresent())
-        {
-            logger.info("Removing sensitive word from Database...");
-            sensitiveWordsRepository.delete(sensitiveWords);
-        } else {
-            logger.warning("Word " + "'" + word + "'" + " does not exist...");
-        }
-    }
 }

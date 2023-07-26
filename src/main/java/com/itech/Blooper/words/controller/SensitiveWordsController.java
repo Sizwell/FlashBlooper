@@ -1,5 +1,6 @@
 package com.itech.Blooper.words.controller;
 
+import com.itech.Blooper.words.service.DeleteService;
 import com.itech.Blooper.words.service.SensitiveWordsService;
 import com.itech.Blooper.words.entity.SensitiveWords;
 import com.itech.Blooper.words.service.UserService;
@@ -14,11 +15,13 @@ public class SensitiveWordsController {
 
     private final SensitiveWordsService sensitiveWordsService;
     private final UserService userService;
+    private final DeleteService deleteService;
 
     @Autowired
-    public SensitiveWordsController(SensitiveWordsService sensitiveWordsService, UserService userService) {
+    public SensitiveWordsController(SensitiveWordsService sensitiveWordsService, UserService userService, DeleteService deleteService) {
         this.sensitiveWordsService = sensitiveWordsService;
         this.userService = userService;
+        this.deleteService = deleteService;
     }
 
     @GetMapping("/all_words")
@@ -55,13 +58,7 @@ public class SensitiveWordsController {
     @DeleteMapping("/delete_word_by_id/{id}")
     public void deleteWordById(@PathVariable("id") Long id)
     {
-        sensitiveWordsService.deleteWord(id);
-    }
-
-    @DeleteMapping("/search_and_delete_word")
-    public void deleteWord(@RequestParam("word") String searchWord)
-    {
-        sensitiveWordsService.searchAndDelete(searchWord.toUpperCase());
+        deleteService.deleteWord(id);
     }
 
     @PostMapping("/process_input")
