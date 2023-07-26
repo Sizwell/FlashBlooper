@@ -2,11 +2,9 @@ package com.itech.Blooper.words.service;
 
 import com.itech.Blooper.words.entity.SensitiveWords;
 import com.itech.Blooper.words.repository.SensitiveWordsRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -30,6 +28,5 @@ public class SensitiveWordsService {
         }
         return sensitiveWordsRepository.findAll();
     }
-
 
 }
