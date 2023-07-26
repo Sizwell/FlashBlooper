@@ -16,6 +16,7 @@ public class SensitiveWordsController {
     private final DeleteService deleteService;
     private final UpdateService updateService;
     private final SearchService searchService;
+    private final AddService addService;
 
     @Autowired
     public SensitiveWordsController(
@@ -23,14 +24,15 @@ public class SensitiveWordsController {
             UserService userService,
             DeleteService deleteService,
             UpdateService updateService,
-            SearchService searchService
-    )
+            SearchService searchService,
+            AddService addService)
     {
         this.sensitiveWordsService = sensitiveWordsService;
         this.userService = userService;
         this.deleteService = deleteService;
         this.updateService = updateService;
         this.searchService = searchService;
+        this.addService = addService;
     }
 
     @GetMapping("/all_words")
@@ -49,7 +51,7 @@ public class SensitiveWordsController {
     @PostMapping("/add_new_word")
     public void addWord(@RequestParam("word") String newWord)
     {
-        sensitiveWordsService.addNewWord(newWord.toUpperCase());
+        addService.addNewWord(newWord.toUpperCase());
     }
 
     @GetMapping("/search_word")

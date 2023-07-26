@@ -73,19 +73,4 @@ public class SensitiveWordsService {
         return modifiedStrings;
     }
 
-    Optional<SensitiveWords> sensitiveWordsOptional;
-    public void addNewWord(String newWord)
-    {
-        SensitiveWords sensitiveWords = new SensitiveWords();
-        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(sensitiveWords.getWords());
-        if (sensitiveWordsOptional.isPresent())
-        {
-            logger.warning("Word already exists...");
-        }
-        else {
-            sensitiveWords.setWords(newWord.toUpperCase());
-            sensitiveWordsRepository.save(sensitiveWords);
-            logger.fine("Word added to Database...");
-        }
-    }
 }
