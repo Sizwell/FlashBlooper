@@ -151,10 +151,12 @@ public class SensitiveWordsService {
         logger.info("Checking input...");
 
         List<String> input = Arrays.asList(userInput.split("\\s+"));
+        List<String> output = new ArrayList<>();
+        String response = null;
 
         int numberOfWords = 0;
         while (numberOfWords < input.size()) {
-            logger.info("Word count " + input.size());
+            logger.info("User input word count: " + input.size());
             sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(input.get(numberOfWords));
 
             if (sensitiveWordsOptional.isPresent())
@@ -174,17 +176,17 @@ public class SensitiveWordsService {
                     if (input.get(i).equals(sensitiveWord))
                     {
                         input.set(i, bloop);
-                        logger.info("New B" + bloop);
                         characterCount ++;
                     }
                 }
-                for (String toUser : input)
-                {
-                    logger.info(toUser + " ");
-                }
+
+                response = String.join(" ", input);
+                logger.info(response);
+
             }
             numberOfWords ++;
         }
-        return input;
+        output.add(response);
+        return output;
     }
 }
