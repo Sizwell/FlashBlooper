@@ -31,7 +31,9 @@ public class UpdateService {
         //Check if the search word is not null, word has characters and is not equal to word already in DB
         if (searchWord != null && searchWord.length() > 0 && !Objects.equals(sensitiveWords.getWords(), searchWord))
         {
-            sensitiveWords.setWords(searchWord);
+            //remove any white spaces (if any) in the new String then update
+            String updateString = searchWord.replaceAll("\\s+", "");
+            sensitiveWords.setWords(updateString);
             sensitiveWordsRepository.save(sensitiveWords);
             logger.fine("Word successfully Updated.");
         }
