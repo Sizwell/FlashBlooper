@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface SensitiveWordsRepository  extends JpaRepository<SensitiveWords, Long>
 {
-    Optional<SensitiveWords> findSensitiveWordsByWords(@Param("words") String word);
+    Optional<SensitiveWords> findSensitiveWordsByWords(String word);
 
     @Query("SELECT sw FROM SensitiveWords sw WHERE sw.words = :words")
     List<SensitiveWords> findByWords(@Param("words") String word);

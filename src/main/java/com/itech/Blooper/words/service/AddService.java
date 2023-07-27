@@ -20,13 +20,19 @@ public class AddService {
     }
 
     Optional<SensitiveWords> sensitiveWordsOptional;
-    public void addNewWord(String newWord)
+    public void addNewWord(String userRequest)
     {
+        /*
+        Remove any white spaces between strings before processing
+         */
+        String newWord = userRequest.replaceAll("\\s+", "");
+        logger.info(newWord);
+
         SensitiveWords sensitiveWords = new SensitiveWords();
-        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(sensitiveWords.getWords());
+        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(newWord);
         if (sensitiveWordsOptional.isPresent())
         {
-            logger.warning("Word already exists...");
+            logger.warning("Word " + "'" + newWord + "'" + " already exists in Database...");
         }
         else {
             sensitiveWords.setWords(newWord.toUpperCase());

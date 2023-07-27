@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -26,11 +27,20 @@ public class UploadWordsService {
     public void processFile(String inputFilePath) {
         List<String> modifiedStrings = readAndProcessFile(inputFilePath);
 
+        Optional<SensitiveWords> sensitiveWordsOptional;
+
         // Save the modified list to the database
-        for (String str : modifiedStrings) {
+        for (String userInput : modifiedStrings) {
             SensitiveWords sensitiveWords = new SensitiveWords();
-            sensitiveWords.setWords(str);
-            sensitiveWordsRepository.save(sensitiveWords);
+            String str = userInput.replaceAll("\\s+", "");
+            sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(str);
+            if (sensitiveWordsOptional.isPresent())
+            {
+                logger.info("Word " + "'" + str + "'" + " already exists in Database. Skipping...");
+            } else {
+                sensitiveWords.setWords(str);
+                sensitiveWordsRepository.save(sensitiveWords);
+            }
         }
         logger.fine("Successfully Uploaded Sensitive words to the Database");
     }

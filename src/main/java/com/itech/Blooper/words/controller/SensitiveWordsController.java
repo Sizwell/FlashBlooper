@@ -3,6 +3,7 @@ package com.itech.Blooper.words.controller;
 import com.itech.Blooper.words.service.*;
 import com.itech.Blooper.words.entity.SensitiveWords;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +47,8 @@ public class SensitiveWordsController {
     @PostMapping("/upload_words")
     public void saveFromFile()
     {
-        String filePath = "C:\\Users\\SizweNcikana\\IdeaProjects\\flash\\Bloop\\src\\main\\resources\\data\\sql_sensitive_list.txt";
+        //@Value("${data/sql_sensitive_list.txt}")
+        String filePath = "src/main/resources/data/sql_sensitive_list.txt";
         uploadWordsService.processFile(filePath);
     }
 
@@ -68,7 +70,7 @@ public class SensitiveWordsController {
         updateService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords().toUpperCase());
     }
 
-    @DeleteMapping("/delete_word_by_id/{id}")
+    @DeleteMapping("/delete_word/{id}")
     public void deleteWordById(@PathVariable("id") Long id)
     {
         deleteService.deleteWord(id);
