@@ -1,11 +1,9 @@
 package com.itech.Blooper.words.service;
 
-import com.itech.Blooper.words.entity.SensitiveWords;
 import com.itech.Blooper.words.repository.SensitiveWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -30,5 +28,4 @@ public class DeleteService {
             sensitiveWordsRepository.deleteById(id);
         }
     }
-
 }

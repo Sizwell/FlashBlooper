@@ -14,5 +14,4 @@ public interface SensitiveWordsRepository  extends JpaRepository<SensitiveWords,
 
     @Query("SELECT sw FROM SensitiveWords sw WHERE sw.words = :words")
     List<SensitiveWords> findByWords(@Param("words") String word);
-
 }

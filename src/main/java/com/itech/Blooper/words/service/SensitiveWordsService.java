@@ -28,5 +28,4 @@ public class SensitiveWordsService {
         }
         return sensitiveWordsRepository.findAll();
     }
-
 }

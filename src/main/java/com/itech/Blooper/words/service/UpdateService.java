@@ -35,6 +35,5 @@ public class UpdateService {
             sensitiveWordsRepository.save(sensitiveWords);
             logger.fine("Word successfully Updated.");
         }
-
     }
 }

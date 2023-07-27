@@ -3,7 +3,6 @@ package com.itech.Blooper.words.controller;
 import com.itech.Blooper.words.service.*;
 import com.itech.Blooper.words.entity.SensitiveWords;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,7 +75,7 @@ public class SensitiveWordsController {
         deleteService.deleteWord(id);
     }
 
-    @PostMapping("/process_input")
+    @PostMapping("/process_user_input")
     public List<String> userInput(@RequestParam("words") String userInput)
     {
         return userInputService.userRequest(userInput.toUpperCase());
