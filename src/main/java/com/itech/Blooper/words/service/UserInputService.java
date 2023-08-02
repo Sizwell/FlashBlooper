@@ -38,8 +38,9 @@ public class UserInputService {
         String response = null;
 
         int numberOfWords = 0;
+        logger.info("User input word count: " + input.size());
         while (numberOfWords < input.size()) {
-            logger.info("User input word count: " + input.size());
+
             sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(input.get(numberOfWords));
 
             if (sensitiveWordsOptional.isPresent())
