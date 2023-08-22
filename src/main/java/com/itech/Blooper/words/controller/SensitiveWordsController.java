@@ -39,6 +39,7 @@ public class SensitiveWordsController {
         this.uploadWordsService = uploadWordsService;
     }
 
+    SensitiveWords sensitiveWords;
     @GetMapping("/all_words")
     public List<SensitiveWords> getWords()
     {
@@ -46,19 +47,29 @@ public class SensitiveWordsController {
     }
 
     @PostMapping("/upload_words")
-    public void saveFromFile()
+    public ResponseEntity<String> saveFromFile()
     {
-        //@Value("${data/sql_sensitive_list.txt}")
         String filePath = "src/main/resources/data/sql_sensitive_list.txt";
-        uploadWordsService.processFile(filePath);
+        try {
+            uploadWordsService.processFile(filePath);
+            return ResponseEntity.status(HttpStatus.OK).body("Uploaded Sensitive words to  Database");
+        } catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error occurred while uploading words \nReason: " + e.getMessage());
+        }
+
     }
 
     @PostMapping("/add_new_word")
     public ResponseEntity <String> addWord(@RequestParam("word") String newWord)
     {
         try {
-            SensitiveWords sensitiveWords = addService.addNewWord(newWord.toUpperCase());
-            return new ResponseEntity<>("New Word saved to Database with ID " + sensitiveWords.getId(), HttpStatus.CREATED);
+            sensitiveWords = addService.addNewWord(newWord.toUpperCase());
+            return new ResponseEntity<>("New Word saved to Database with ID " +
+                    sensitiveWords.getId(),
+                    HttpStatus.CREATED
+            );
         } catch (Exception e) {
             return new ResponseEntity<>("Error creating Word \nReason: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
