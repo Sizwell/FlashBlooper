@@ -1,4 +1,4 @@
-package com.itech.Blooper.words.service;
+package com.itech.Blooper.user.service;
 
 import com.itech.Blooper.words.entity.SensitiveWords;
 import com.itech.Blooper.words.repository.SensitiveWordsRepository;
@@ -12,13 +12,13 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
-public class UserInputService {
+public class UserRequestService {
 
     private final SensitiveWordsRepository sensitiveWordsRepository;
-    private static final Logger logger = Logger.getLogger(UserInputService.class.getName());
+    private static final Logger logger = Logger.getLogger(UserRequestService.class.getName());
 
     @Autowired
-    public UserInputService(SensitiveWordsRepository sensitiveWordsRepository) {
+    public UserRequestService(SensitiveWordsRepository sensitiveWordsRepository) {
         this.sensitiveWordsRepository = sensitiveWordsRepository;
     }
 

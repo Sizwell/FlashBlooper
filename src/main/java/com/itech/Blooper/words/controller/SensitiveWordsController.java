@@ -1,5 +1,6 @@
 package com.itech.Blooper.words.controller;
 
+import com.itech.Blooper.exception.WordNotFoundException;
 import com.itech.Blooper.words.service.*;
 import com.itech.Blooper.words.entity.SensitiveWords;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/api/v2")
 public class SensitiveWordsController {
 
     private final SensitiveWordsService sensitiveWordsService;
-    private final UserInputService userInputService;
     private final DeleteService deleteService;
     private final UpdateService updateService;
     private final SearchService searchService;
@@ -24,14 +24,12 @@ public class SensitiveWordsController {
     @Autowired
     public SensitiveWordsController(
             SensitiveWordsService sensitiveWordsService,
-            UserInputService userInputService,
             DeleteService deleteService,
             UpdateService updateService,
             SearchService searchService,
             AddService addService, UploadWordsService uploadWordsService)
     {
         this.sensitiveWordsService = sensitiveWordsService;
-        this.userInputService = userInputService;
         this.deleteService = deleteService;
         this.updateService = updateService;
         this.searchService = searchService;
@@ -71,31 +69,48 @@ public class SensitiveWordsController {
                     HttpStatus.CREATED
             );
         } catch (Exception e) {
-            return new ResponseEntity<>("Error creating Word \nReason: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error creating Word \nReason: " +
+                    e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/search_word")
-    public List<SensitiveWords> returnOneWord(@RequestParam("word") String searchWord)
+    public ResponseEntity<List<SensitiveWords>> returnOneWord(@RequestParam("word") String searchWord)
     {
-        return searchService.searchWord(searchWord.toUpperCase());
+        try {
+            List<SensitiveWords> words = searchService.searchWord(searchWord.toUpperCase());
+            return new ResponseEntity<>(words, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/update_word")
-    public void updateWord(@RequestBody SensitiveWords sensitiveWords)
+    public ResponseEntity<String> updateWord(@RequestBody SensitiveWords sensitiveWords)
     {
-        updateService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords().toUpperCase());
+        try {
+            updateService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords().toUpperCase());
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully updated word...");
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error occurred \nReason: " +
+                    e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     @DeleteMapping("/delete_word/{id}")
-    public void deleteWordById(@PathVariable("id") Long id)
+    public ResponseEntity<String> deleteWordById(@PathVariable("id") Long id)
     {
-        deleteService.deleteWord(id);
-    }
-
-    @PostMapping("/process_user_input")
-    public List<String> userInput(@RequestParam("words") String userInput)
-    {
-        return userInputService.userRequest(userInput.toUpperCase());
+        try {
+            deleteService.deleteWord(id);
+            return new ResponseEntity<>("Word with ID " + "'" + id + "'" + " deleted", HttpStatus.OK);
+        }
+        catch (WordNotFoundException wnf) {
+            return new ResponseEntity<>(wnf.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("Unable to delete Word with ID "  + "'" + id + "'" + ". \nReason: " +
+                    e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
