@@ -3,6 +3,8 @@ package com.itech.Blooper.words.controller;
 import com.itech.Blooper.words.service.*;
 import com.itech.Blooper.words.entity.SensitiveWords;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,9 +54,14 @@ public class SensitiveWordsController {
     }
 
     @PostMapping("/add_new_word")
-    public void addWord(@RequestParam("word") String newWord)
+    public ResponseEntity <String> addWord(@RequestParam("word") String newWord)
     {
-        addService.addNewWord(newWord.toUpperCase());
+        try {
+            SensitiveWords sensitiveWords = addService.addNewWord(newWord.toUpperCase());
+            return new ResponseEntity<>("New Word saved to Database with ID " + sensitiveWords.getId(), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error creating Word \nReason: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/search_word")

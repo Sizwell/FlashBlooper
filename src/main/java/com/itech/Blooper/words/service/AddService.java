@@ -20,13 +20,12 @@ public class AddService {
     }
 
     Optional<SensitiveWords> sensitiveWordsOptional;
-    public void addNewWord(String userRequest)
+    public SensitiveWords addNewWord(String userRequest)
     {
         /*
         Remove any white spaces between strings before processing
          */
         String newWord = userRequest.replaceAll("\\s+", "");
-        logger.info(newWord);
 
         SensitiveWords sensitiveWords = new SensitiveWords();
         sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(newWord);
@@ -39,6 +38,7 @@ public class AddService {
             sensitiveWordsRepository.save(sensitiveWords);
             logger.fine("Word added to Database...");
         }
+        return sensitiveWords;
     }
 
 }
