@@ -26,13 +26,6 @@ public class UserRequestService {
     {
         Optional<SensitiveWords> sensitiveWordsOptional;
 
-        sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(userInput);
-        if (sensitiveWordsOptional.isEmpty())
-        {
-            logger.info("Word not found!");
-        }
-        logger.info("Checking input...");
-
         List<String> input = Arrays.asList(userInput.split("\\s+"));
         List<String> output = new ArrayList<>();
         String response = null;
@@ -41,13 +34,13 @@ public class UserRequestService {
         logger.info("User input word count: " + input.size());
         while (numberOfWords < input.size()) {
 
-            sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(input.get(numberOfWords));
+            String words = input.get(numberOfWords);
+            sensitiveWordsOptional = sensitiveWordsRepository.findSensitiveWordsByWords(words);
 
             if (sensitiveWordsOptional.isPresent())
             {
                 int characterCount = 0;
-                String sensitiveWord = input.get(numberOfWords);
-                for (int i = 0; i < sensitiveWord.length(); i++) {
+                for (int i = 0; i < words.length(); i++) {
                     if (input.get(numberOfWords).charAt(characterCount) != ' ')
                     {
                         characterCount ++;
@@ -57,17 +50,17 @@ public class UserRequestService {
                 String bloop = "*".repeat(characterCount);
 
                 for (int i = 0; i < input.size(); i++) {
-                    if (input.get(i).equals(sensitiveWord))
+                    if (input.get(i).equals(words))
                     {
                         input.set(i, bloop);
                         characterCount ++;
                     }
                 }
 
-                response = String.join(" ", input);
-                logger.info(response);
+
 
             }
+            response = String.join(" ", input);
             numberOfWords ++;
         }
         output.add(response);

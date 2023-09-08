@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v2")
+@RequestMapping(path = "/api/v2/request")
 public class UserRequest {
 
     private final UserRequestService userRequestService;
@@ -20,7 +20,7 @@ public class UserRequest {
         this.userRequestService = userRequestService;
     }
 
-    @PostMapping("/user_request")
+    @PostMapping("/process")
     public List<String> userInput(@RequestParam("words") String userInput)
     {
         return userRequestService.userRequest(userInput.toUpperCase());

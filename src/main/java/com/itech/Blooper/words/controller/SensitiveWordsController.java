@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v2")
+@RequestMapping(path = "/api/v2/sensitiveWords")
 public class SensitiveWordsController {
 
     private final SensitiveWordsService sensitiveWordsService;
@@ -38,13 +38,13 @@ public class SensitiveWordsController {
     }
 
     SensitiveWords sensitiveWords;
-    @GetMapping("/all_words")
+    @GetMapping("/allWords")
     public List<SensitiveWords> getWords()
     {
         return sensitiveWordsService.getSensitiveWords();
     }
 
-    @PostMapping("/upload_words")
+    @PostMapping("/upload")
     public ResponseEntity<String> saveFromFile()
     {
         String filePath = "src/main/resources/data/sql_sensitive_list.txt";
@@ -59,7 +59,7 @@ public class SensitiveWordsController {
 
     }
 
-    @PostMapping("/add_new_word")
+    @PostMapping("/word")
     public ResponseEntity <String> addWord(@RequestParam("word") String newWord)
     {
         try {
@@ -74,7 +74,7 @@ public class SensitiveWordsController {
         }
     }
 
-    @GetMapping("/search_word")
+    @GetMapping("/word/search")
     public ResponseEntity<List<SensitiveWords>> returnOneWord(@RequestParam("word") String searchWord)
     {
         try {
@@ -85,10 +85,11 @@ public class SensitiveWordsController {
         }
     }
 
-    @PutMapping("/update_word")
+    @PutMapping("/word")
     public ResponseEntity<String> updateWord(@RequestBody SensitiveWords sensitiveWords)
     {
         try {
+
             updateService.updateWord(sensitiveWords.getId(), sensitiveWords.getWords().toUpperCase());
             return ResponseEntity.status(HttpStatus.OK).body("Successfully updated word...");
         } catch (Exception e) {
@@ -98,7 +99,7 @@ public class SensitiveWordsController {
         }
     }
 
-    @DeleteMapping("/delete_word/{id}")
+    @DeleteMapping("/word/{id}")
     public ResponseEntity<String> deleteWordById(@PathVariable("id") Long id)
     {
         try {
